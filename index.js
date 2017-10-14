@@ -1325,6 +1325,8 @@ var NgxIntlTelInputComponent = (function () {
      * @return {?}
      */
     NgxIntlTelInputComponent.prototype.onPhoneNumberChange = function () {
+        this.value = this.phone_number;
+        this.valueChange.emit(this.value);
         var isValid = this.phone_number.length == this.selectedCountry.placeHolder.length;
         if(isValid) {
             this.value = "+" + this.selectedCountry.dialCode + this.phone_number;
