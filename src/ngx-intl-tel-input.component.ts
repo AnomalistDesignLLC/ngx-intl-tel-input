@@ -12,6 +12,7 @@ import * as _ from 'google-libphonenumber';
 export class NgxIntlTelInputComponent implements OnInit {
   @Input() value = '';
   @Input() preferredCountries: Array<string> = [];
+  @Input() onlyCountries: Array<string> = [];
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
 
   phone_number = '';
@@ -25,6 +26,14 @@ export class NgxIntlTelInputComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.onlyCountries.length){
+      this.onlyCountries.forEach(function(iso2){
+          this.allCountries = this.allCountries.filter(function(c){
+              return this.onlyCountries.indexOf(c.iso2)>=0;
+          })
+      })
+    }
+
     if (this.preferredCountries.length) {
       this.preferredCountries.forEach(iso2 => {
         let preferredCountry = this.allCountries.filter((c) => {
