@@ -1287,6 +1287,7 @@ var NgxIntlTelInputComponent = (function () {
         this.onlyCountries = [];
         this.preferredCountries = [];
         this.valueChange = new EventEmitter();
+        this.isValid = new EventEmitter();
         this.phone_number = '';
         this.allCountries = [];
         this.preferredCountriesInDropDown = [];
@@ -1324,8 +1325,15 @@ var NgxIntlTelInputComponent = (function () {
      * @return {?}
      */
     NgxIntlTelInputComponent.prototype.onPhoneNumberChange = function () {
-        this.value = this.selectedCountry.dialCode + this.phone_number;
-        this.valueChange.emit(this.value);
+        var isValid = this.phone_number.length == this.selectedCountry.placeHolder.length;
+        if(isValid) {
+            this.value = "+" + this.selectedCountry.dialCode + this.phone_number;
+            this.valueChange.emit(this.value);
+            this.isValid.emit(isValid);
+        } else 
+        {
+            this.isValid.emit(isValid);
+        }
     };
     /**
      * @param {?} country
@@ -1337,6 +1345,13 @@ var NgxIntlTelInputComponent = (function () {
         if (this.phone_number.length > 0) {
             this.value = this.selectedCountry.dialCode + this.phone_number;
             this.valueChange.emit(this.value);
+            var isValid = this.phone_number.length == this.selectedCountry.placeHolder.length;
+            if(isValid) {
+                this.isValid.emit(isValid);
+            } else 
+            {
+                this.isValid.emit(isValid);
+            }
         }
         el.focus();
     };
@@ -1364,7 +1379,7 @@ var NgxIntlTelInputComponent = (function () {
             country.priority = +c[3] || 0;
             country.areaCode = +c[4] || null;
             country.flagClass = country.iso2.toLocaleLowerCase();
-            country.placeHolder = _this.getPhoneNumberPlaceHolder(country.iso2.toUpperCase());
+            country.placeHolder = _this.getPhoneNumberPlaceHolder(country.iso2.toUpperCase()).toString().split(" ")[1];
             _this.allCountries.push(country);
         });
     };
@@ -1405,6 +1420,7 @@ NgxIntlTelInputComponent.propDecorators = {
     'preferredCountries': [{ type: Input },],
     'onlyCountries': [{ type: Input },],
     'valueChange': [{ type: Output },],
+    'isValid': [{ type: Output },],
 };
 
 var NgxIntlTelInputService = (function () {
